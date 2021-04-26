@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="fileDao" class="ru.otus.spring.dao.CSVFileDaoSimple">
+        <!--property name="fileName" value="question_list.csv"/-->
+        <constructor-arg name="fileName" value="question_list.csv"/>
+    </bean>
+
+    <bean id="csvFileService" class="ru.otus.spring.service.CSVFileServiceImpl">
+        <constructor-arg name="fileDao" ref="fileDao"/>
+    </bean>
+
+</beans>
