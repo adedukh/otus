@@ -1,9 +1,12 @@
 package ru.otus.spring.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import ru.otus.spring.dao.CSVFileDaoSimple;
 import ru.otus.spring.dao.QADao;
-import ru.otus.spring.dao.RightAnswersNumDao;
+import ru.otus.spring.domain.QA;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,28 +14,34 @@ import java.util.List;
 import java.util.Scanner;
 
 @Component
+@PropertySource("classpath:application.properties")
 public class TestAnswersServiceImpl implements TestAnswersService {
     @Autowired
     private QADao qaDao;
 
     @Autowired
-    private RightAnswersNumDao rightAnswersNumDao;
-
-    @Autowired
-    private QAService qaService;
+    private CSVFileDaoSimple csvFileDaoSimple;
 
     private List<String> tests;
     private String lastName;
     private String firstName;
 
+    @Value("${csvfile}")
+    private String csvfile;
+
+    @Value("${answersnum}")
+    private int answersnum;
+
     public void Run() throws IOException {
         //System.out.println("TestAnswersServiceImpl Run");
-        qaService.prepareQuestions();
+
+        QA qa = readQuestions();
+
         getNames();
         tests = askQuestion();
 
         int answers = checkAnswers(qaDao, tests);
-        int needAnswers = rightAnswersNumDao.getrNum().getrNum();
+        int needAnswers = answersnum;
 
         if (needAnswers <= answers) {
             System.out.println("Dear, " + lastName + " " + firstName + "! You passed the test successfully! Correct answers " + answers + " out of " + qaDao.getQList().size());
@@ -40,6 +49,15 @@ public class TestAnswersServiceImpl implements TestAnswersService {
         else {
             System.out.println("Dear, " + lastName + " " + firstName + "! Sorry, you have not passed the test. Correct answers " + answers + " out of " + qaDao.getQList().size());
         }
+
+    }
+
+    public QA readQuestions() throws IOException {
+
+        List<String> fileText = csvFileDaoSimple.getCSVFile(csvfile);
+        QA qaList = qaDao.getQA(fileText);
+
+        return qaList;
 
     }
 

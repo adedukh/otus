@@ -2,13 +2,10 @@ package ru.otus.spring.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.otus.spring.domain.CSVFile;
 import ru.otus.spring.domain.QA;
-import ru.otus.spring.domain.QAImpl;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static jdk.nashorn.internal.objects.NativeString.substring;
@@ -24,17 +21,19 @@ public class QADaoSimple implements QADao {
     }
 
     @Override
-    public void setQA(CSVFile csvFile) throws IOException {
+    public QA getQA(List<String> questionsText) throws IOException {
         //System.out.println("QADaoSimple setQA");
         ArrayList<String> questions = new ArrayList<>();
         ArrayList<String> answers = new ArrayList<>();
 
-        for (String[] row : csvFile.getCsvData()) {
-            questions.add(substring(Arrays.toString(row), 1, Arrays.toString(row).indexOf("#") - 1));
-            answers.add(substring(Arrays.toString(row), Arrays.toString(row).indexOf("#")+1, Arrays.toString(row).indexOf(",")));
+        for (String row : questionsText) {
+            questions.add(substring(row, 0, row.indexOf("#")));
+            answers.add(substring(row, row.indexOf("#")+1, row.indexOf(";")));
         }
         this.qa.setQuestions(questions);
         this.qa.setAnswers(answers);
+
+        return  this.qa;
     }
 
     @Override

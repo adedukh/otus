@@ -1,31 +1,32 @@
 package ru.otus.spring.dao;
 
-import au.com.bytecode.opencsv.CSVReader;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
-import ru.otus.spring.domain.CSVFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Pattern;
+
 
 @Component
-@PropertySource("classpath:application.properties")
 public class CSVFileDaoSimple implements FileDao{
-    private final String  fileName;
-
-    public CSVFileDaoSimple(@Value("${csvfile}") String fileName) {
-        //System.out.println("CSVFileDaoSimple Constructor");
-        this.fileName = fileName;
-    }
 
     @Override
-    public CSVFile getCSVFile() throws IOException {
-        //System.out.println("CSVFileDaoSimple getCSVFile");
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
-        CSVReader reader = new CSVReader(new InputStreamReader(inputStream), ';');
+    public List<String> getCSVFile(String fileName) throws IOException  {
+        List<String> questionsText = new ArrayList<>();
 
-        return new CSVFile(reader.readAll());
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName);
+        Scanner sсanner = new Scanner(inputStream).useDelimiter(Pattern.compile("\\r\\n|\\r|\\n"));
+
+
+                while (sсanner.hasNext()) {
+                    String question = sсanner.hasNext() ? sсanner.next() : "";
+                    questionsText.add(question);
+                }
+
+
+        return questionsText;
     }
 }

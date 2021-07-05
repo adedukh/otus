@@ -2,8 +2,6 @@ package ru.otus.spring;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
-import ru.otus.spring.service.CSVFileService;
-import ru.otus.spring.service.QAService;
 import ru.otus.spring.service.TestAnswersService;
 
 import java.io.*;

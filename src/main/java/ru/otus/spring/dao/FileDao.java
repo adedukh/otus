@@ -1,9 +1,8 @@
 package ru.otus.spring.dao;
 
-import ru.otus.spring.domain.CSVFile;
-
 import java.io.IOException;
+import java.util.List;
 
 public interface FileDao {
-    CSVFile getCSVFile() throws IOException;
+    List<String> getCSVFile(String fileName) throws IOException;
 }
